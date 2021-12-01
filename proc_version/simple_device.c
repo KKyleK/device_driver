@@ -107,7 +107,7 @@ static ssize_t dev_read(struct file *file, char *usr_buf,
 /* copies kernel space buffer to user space usr buf */
     copy_to_user(usr_buf, buffer, rv);
     return rv;    //returns this amount to the user.
-
+}
 
 
 module_init(simple_init);
