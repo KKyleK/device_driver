@@ -1,16 +1,11 @@
 //MUST BE RUN WITH SUDO ON
 
-
 #include <stdio.h>   //printf
 #include <unistd.h>   //write and read
 
 #include <sys/types.h>  //open
 #include <sys/stat.h>
 #include <fcntl.h>
-
-
-
-
 
 
 int main(){
@@ -23,7 +18,7 @@ int main(){
     fd = open("/proc/simple_device", O_RDWR);
     
     if(fd == -1){
-        printf("\nCould not open file\n");
+        printf("Could not open file\n");
     }
     else{
 	

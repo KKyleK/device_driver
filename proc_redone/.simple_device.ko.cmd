@@ -1,0 +1,1 @@
+cmd_/home/kkoiv395/loadable_kernel/proc_redone/simple_device.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/kkoiv395/loadable_kernel/proc_redone/simple_device.ko /home/kkoiv395/loadable_kernel/proc_redone/simple_device.o /home/kkoiv395/loadable_kernel/proc_redone/simple_device.mod.o;  true
