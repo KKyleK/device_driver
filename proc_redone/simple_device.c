@@ -17,18 +17,26 @@
 #include <linux/proc_fs.h>  //open_proc and close proc
 
 
-#define BUFFER_SIZE 128
+#include <linux/stat.h>    //For changing the file permissions properly.
+
+
+
 #define PROC_NAME "simple_device"
+#define BUFFER_SIZE 128
+
+ssize_t proc_write(struct file *filep, const char *usr_buffer, size_t len, loff_t *offset);
+ssize_t proc_read(struct file *file, char *usr_buf, size_t count, loff_t *pos);
 
 
-ssize_t proc_write(struct file *filep, const char *buffer, size_t len, loff_t *offset);
-ssize_t proc_read(struct file *file, char *usr_buf,
-size_t count, loff_t *pos);
+
+
+//static char buffer[128] = {0};
 
 
 
 
-static struct proc_dir_entry *proc_file;
+
+static struct proc_dir_entry *proc_file;    //If we want to chang the file permissions correctly.
 
 
 static struct file_operations proc_ops = {
@@ -39,11 +47,12 @@ static struct file_operations proc_ops = {
 
 
 
+
 /* This function is called when the module is loaded. */
 int proc_init(void)
 {
 
-//    proc_file -> mode = s_IFREG | S_IRUGO;                     //Also try 0660
+//    proc_file -> mode = s_IFREG | S_IRUGO;                        //Also try 0660
     proc_file = proc_create(PROC_NAME, 00444, NULL, &proc_ops);     //MAX permissions power is this 00444
     
     return 0;
@@ -61,33 +70,43 @@ ssize_t proc_read(struct file *file, char *usr_buf,
 		  size_t count, loff_t *pos)
 {
     int rv = 0;
-    char buffer[BUFFER_SIZE];
+    char buffer_test[BUFFER_SIZE];    //Could make this static I guess...
+
+
+
+
+
+
+    
     static int completed = 0;
     printk("READING!\n");
-    
-    
+        
     
     if (completed) {
 	completed = 0;
 	return 0;
     }
     completed = 1;
-    rv = sprintf(buffer, "Hello World\n");
+    rv = sprintf(buffer_test, "Hello World\n");
 // copies kernel space buffer to user space usr buf */
-    copy_to_user(usr_buf, buffer, rv);
+    copy_to_user(usr_buf, buffer_test, rv);
     return rv;
 }
 
-ssize_t proc_write(struct file *filep, const char *buffer, size_t len, loff_t *offset){
 
 
-    //char buffer_in[128];
-    //Sprintf is (src, dest, length);
-    // sprintf(buffer_in,buffer, len);
-    printk("WRITING lets goooooo\n");
+
+
+
+ssize_t proc_write(struct file *filep, const char *usr_buffer, size_t len, loff_t *offset){
+
+    char buffer[BUFFER_SIZE];
     
-
-    return -1;
+    
+    copy_from_user(buffer, usr_buffer ,len);     //its gonna write the result into the kernel buffer...
+    printk("%s\n",buffer);
+    
+    return 0;    //Then it won't error inside of the user_code.c
 }
 
 
