@@ -28,12 +28,8 @@ ssize_t proc_write(struct file *filep, const char *usr_buffer, size_t len, loff_
 ssize_t proc_read(struct file *file, char *usr_buf, size_t count, loff_t *pos);
 
 
-
-
-//static char buffer[128] = {0};
-
-
-
+static char buffer[128] = {0};
+static int buffer_fill = 0;
 
 
 static struct proc_dir_entry *proc_file;    //If we want to chang the file permissions correctly.
@@ -69,44 +65,26 @@ void proc_exit(void)
 ssize_t proc_read(struct file *file, char *usr_buf,
 		  size_t count, loff_t *pos)
 {
-    int rv = 0;
-    char buffer_test[BUFFER_SIZE];    //Could make this static I guess...
 
-
-
-
-
-
-    
-    static int completed = 0;
     printk("READING!\n");
-        
-    
-    if (completed) {
-	completed = 0;
-	return 0;
-    }
-    completed = 1;
-    rv = sprintf(buffer_test, "Hello World\n");
-// copies kernel space buffer to user space usr buf */
-    copy_to_user(usr_buf, buffer_test, rv);
-    return rv;
+
+    copy_to_user(usr_buf, buffer, buffer_fill);
+    return buffer_fill;
 }
-
-
-
 
 
 
 ssize_t proc_write(struct file *filep, const char *usr_buffer, size_t len, loff_t *offset){
 
-    char buffer[BUFFER_SIZE];
-    
-    
+    printk("WRITING!\n"); 
+    buffer_fill = 0;   
+   
     copy_from_user(buffer, usr_buffer ,len);     //its gonna write the result into the kernel buffer...
+    buffer_fill = len;
+    
     printk("%s\n",buffer);
     
-    return 0;    //Then it won't error inside of the user_code.c
+    return 0;    
 }
 
 
