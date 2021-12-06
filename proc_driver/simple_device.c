@@ -52,7 +52,7 @@
 ssize_t proc_write(struct file *filep, const char *usr_buffer, size_t len, loff_t *offset);
 ssize_t proc_read(struct file *file, char *usr_buf, size_t count, loff_t *pos);
 loff_t proc_seek (struct file *filep, loff_t, int);
-loff_t proc_seek (struct file *filep, loff_t offset, int type);   //Offset will be used to change directories.
+loff_t proc_seek (struct file *filep, loff_t offset, int type);
 
 
 int location = 0;                           //current register.
