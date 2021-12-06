@@ -1,28 +1,34 @@
-//MUST BE RUN WITH SUDO ON
+/*
+Authors:    Kyle & Andrew
 
-#include <stdio.h>   //printf
-#include <unistd.h>   //write and read
+Details:    Provides error checking before invoking the file operation read.
+            The write call will then invoke the version defined in the device driver.
+*/
+
+
+#include <stdio.h>     //printf
+#include <unistd.h>    //write and read
 
 #include <sys/types.h>  //open
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define BUFFER_SIZE 128
 
 int main(){
 
 
     int fd;
-    char buff[128];
-    
-    
-    fd = open("/proc/simple_device", O_RDWR);
+    char buff[BUFFER_SIZE];
+        
+    fd = open("/proc/simple_device", O_RDONLY);
     
     if(fd == -1){
         printf("Could not open file\n");
     }
     else{
 	
-	if(read(fd, buff, 128) == -1){   //not sure what to make this 128 thing...
+	if(read(fd, buff, BUFFER_SIZE) == -1){  
 	    printf("read failed\n");
 	}
 	

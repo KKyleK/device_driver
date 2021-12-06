@@ -1,38 +1,48 @@
-//MUST BE RUN WITH SUDO ON
-#include <string.h>   //concat strings
+/*
+Authors:    Kyle & Andrew
 
-#include <stdio.h>   //printf
-#include <unistd.h>   //write and read
+Details:    Provides error checking before invoking the file operation write.
+            The write call will then invoke the version defined in the device driver.
 
-#include <sys/types.h>  //open
+	    if the text entered is longer than 128 characters, the input will be automatically shortened.
+*/
+
+
+#include <string.h>       //concat strings
+
+#include <stdio.h>        //printf
+#include <unistd.h>       //write and read
+
+#include <sys/types.h>    //open
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define BUFFER_SIZE 128
 
 
 int main(int argc, char *argv[]){
 
     int fd;
-    char buff[128] = {0};
+    char buff[BUFFER_SIZE] = {0};
 
     int fill = 0;
-    for(fill = 1; fill <argc; fill++){   //dont want the command that was added...
-
+    for(fill = 1; fill <argc; fill++){  
+	                                
 	strcat(buff,argv[fill]);
 	if(fill<argc){
-	    	strcat(buff," ");
-    }
+	    strcat(buff," ");           //adds a space inbetween words
+	  }
     }
 
     
-    fd = open("/proc/simple_device", O_RDWR);   //CHANGE THIS LATER (the permission can be write only)
+    fd = open("/proc/simple_device", O_WRONLY);
     
     if(fd == -1){
         printf("Could not open file\n");
     }
     else{
 	
-    	if(write(fd, buff, 128) == -1){   //Try writing.... -> Should output the result into dmesg
+    	if(write(fd, buff, BUFFER_SIZE) == -1){
 	    printf("write failed\n");
 	}
 	
