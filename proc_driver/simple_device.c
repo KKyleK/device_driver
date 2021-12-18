@@ -1,6 +1,4 @@
-// Group members:        Kyle Koivuneva & Andrew trac
-//
-// emails:               kkoiv395@mtroyal.ca & atrac541@mtroyal.ca
+// email:               kkoiv395@mtroyal.ca
 // Course:               COMP 3659
 //
 // Instructor:           Marc Schroeder
